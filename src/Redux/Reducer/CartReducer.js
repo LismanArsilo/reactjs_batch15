@@ -27,7 +27,6 @@ const CartReducer = (state = INIT_STATE, action) => {
       return { ...state };
     case ADD_CART:
       return applyAddCart(state, action);
-
     default:
       return state;
   }

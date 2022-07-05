@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import ChartForm from "../../form/ChartForm";
 import { doGetCart, doAddCart } from "../Action";
@@ -10,6 +10,8 @@ export default function CartListRedux() {
   const totalHarga = useSelector((state) => state.totalHarga);
   const totalQty = useSelector((state) => state.totalQty);
 
+  const [totalHrga, setTotalHrga] = useState(totalHarga);
+  const [totalQuantity, setTotalQuantity] = useState(totalQty);
   const [display, setDisplay] = useState(false);
   const [values, setValues] = useState({
     prodName: undefined,
@@ -20,6 +22,20 @@ export default function CartListRedux() {
   const handleChange = (name) => (event) => {
     setValues({ ...values, [name]: event.target.value });
   };
+  useEffect(() => {
+    const totalHarga = carts.reduce((sum, el) => sum + el.salary * el.qty, 0);
+    setTotalHrga(totalHarga);
+    const totalQuantity = carts.reduce((sum, el) => sum + el.qty, 0);
+    setTotalQuantity(totalQuantity);
+  }, [carts]);
+  const selectOnChange = (e) => {
+    const value =
+      e.target.selectedIndex !== 0
+        ? e.target.options[e.target.selectedIndex].value
+        : null;
+    setValues({ ...values, Category: value });
+  };
+
   const onSubmit = (event) => {
     event.preventDefault();
     const payload = {
@@ -32,6 +48,7 @@ export default function CartListRedux() {
     dispatch(doAddCart(payload));
     setDisplay(false);
   };
+  console.info(carts);
   return (
     <div>
       <div>
@@ -41,8 +58,9 @@ export default function CartListRedux() {
           <ChartForm
             onSubmitForm={onSubmit}
             handleChange={handleChange}
-            Category={category}
+            category={category}
             setDisplay={setDisplay}
+            selectOnChange={selectOnChange}
           />
         ) : (
           <>
@@ -70,8 +88,8 @@ export default function CartListRedux() {
                 ))}
               </tbody>
             </table>
-            <h3>Total Salary : Rp. {totalHarga}</h3>
-            <h3>Total Quantity : Rp. {totalQty}</h3>
+            <h3>Total Salary : Rp. {totalHrga}</h3>
+            <h3>Total Quantity : Rp. {totalQuantity}</h3>
           </>
         )}
       </div>

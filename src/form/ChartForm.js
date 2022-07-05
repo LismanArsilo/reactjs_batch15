@@ -35,7 +35,7 @@ export default function ChartFrom(props) {
           <label>Category : </label>
           <select onChange={props.selectOnChange}>
             <option>Choice Category</option>
-            {props.Category.map((values, index) => (
+            {props.category.map((values, index) => (
               <option key={index}>{values}</option>
             ))}
           </select>

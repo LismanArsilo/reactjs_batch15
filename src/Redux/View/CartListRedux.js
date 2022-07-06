@@ -28,12 +28,13 @@ export default function CartListRedux() {
     const totalQuantity = carts.reduce((sum, el) => sum + el.qty, 0);
     setTotalQuantity(totalQuantity);
   }, [carts]);
+
   const selectOnChange = (e) => {
     const value =
       e.target.selectedIndex !== 0
         ? e.target.options[e.target.selectedIndex].value
         : null;
-    setValues({ ...values, Category: value });
+    setValues({ ...values, category: value });
   };
 
   const onSubmit = (event) => {

@@ -10,4 +10,22 @@ const listLocation = async () => {
   }
 };
 
-export default { listLocation };
+const createLocation = async (payload) => {
+  try {
+    const result = await axios.post(`${config.domain}/location/`, payload);
+    return result;
+  } catch (error) {
+    return await error.message;
+  }
+};
+
+const deletedLocation = async (id) => {
+  try {
+    const result = await axios.delete(`${config.domain}/location/${id}`);
+    return result;
+  } catch (error) {
+    return await error.message;
+  }
+};
+
+export default { listLocation, createLocation, deletedLocation };

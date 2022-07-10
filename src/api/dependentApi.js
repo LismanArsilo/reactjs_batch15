@@ -10,4 +10,21 @@ const listDependent = async () => {
   }
 };
 
-export default { listDependent };
+const createDependent = async (payload) => {
+  try {
+    const result = await axios.post(`${config.domain}/dependent/`, payload);
+    return result;
+  } catch (error) {
+    return await error.result;
+  }
+};
+
+const deletedDependent = async (id) => {
+  try {
+    const result = await axios.delete(`${config.domain}/dependent/${id}`);
+    return result;
+  } catch (error) {
+    return await error.message;
+  }
+};
+export default { listDependent, createDependent, deletedDependent };

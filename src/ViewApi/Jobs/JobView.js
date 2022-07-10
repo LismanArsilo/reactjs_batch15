@@ -26,14 +26,6 @@ export default function JobView() {
     });
   };
 
-  const onDeleted = async (id) => {
-    window.confirm(`You sure deleted Data ?`)
-      ? await jobApi.deletedJob(id).then(() => {
-          jobs();
-        })
-      : jobs();
-  };
-
   const handleChange = (name) => (e) => {
     setValues({ ...values, [name]: e.target.value });
   };
@@ -50,6 +42,14 @@ export default function JobView() {
       jobs();
     });
     setDisplay(false);
+  };
+
+  const onDeleted = async (id) => {
+    window.confirm(`You sure deleted Data ?`)
+      ? await jobApi.deletedJob(id).then(() => {
+          jobs();
+        })
+      : jobs();
   };
 
   return (

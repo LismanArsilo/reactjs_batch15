@@ -24,18 +24,12 @@ export default function RegionView() {
     });
   };
 
-  const onDeleted = async (id) => {
-    window.confirm(`Your sure deleted data ?`)
-      ? regionApi.deletedRegion(id).then(() => {
-          regions();
-        })
-      : regions();
-  };
-
+  // untuk mengambil data yang di kirimkan di dalam form
   const handleChange = (name) => (e) => {
     setValues({ ...values, [name]: e.target.value });
   };
 
+  // untuk menangkap form dan mengirim payload ke api
   const onSubmit = async () => {
     const payload = {
       region_name: values.region_name,
@@ -45,6 +39,15 @@ export default function RegionView() {
       regions();
     });
     setDisplay(false);
+  };
+
+  const onDeleted = async (id) => {
+    // Memberikan kondisi agar data tidak langsung terhapus dengan ternary
+    window.confirm(`Your sure deleted data ?`)
+      ? regionApi.deletedRegion(id).then(() => {
+          regions();
+        })
+      : regions();
   };
 
   return (

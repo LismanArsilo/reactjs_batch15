@@ -18,6 +18,7 @@ export default function LocationView() {
     locations();
   }, []);
 
+  // melakukan get dan di simpan ke dalam variabel agar dapat di gunakan kembali
   const locations = async () => {
     locationApi.listLocation().then((data) => {
       setLocation(
@@ -28,10 +29,12 @@ export default function LocationView() {
     });
   };
 
+  // Mengambil data dari form yang di isi
   const handleChange = (name) => (e) => {
     setValues({ ...values, [name]: e.target.value });
   };
 
+  // Menangkap form yang sudah di isi dan mengirim payload ke api
   const onSubmit = async () => {
     const payload = {
       location_id: values.location_id,
@@ -48,6 +51,7 @@ export default function LocationView() {
     setDisplay(false);
   };
 
+  // Memberikan kondisi agar data tidak langsung terhapus dengan ternary
   const onDeleted = async (id) => {
     window.confirm(`You sure deleted data ?`)
       ? locationApi.deletedLocation(id).then(() => {

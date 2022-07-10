@@ -27,14 +27,6 @@ export default function DependentView() {
     });
   };
 
-  const onDeleted = async (id) => {
-    window.confirm(`You sure deleted Data ?`)
-      ? await dependentApi.deletedDependent(id).then(() => {
-          dependents();
-        })
-      : dependents();
-  };
-
   const handleChange = (name) => (e) => {
     setValues({ ...values, [name]: e.target.value });
   };
@@ -54,6 +46,13 @@ export default function DependentView() {
     setDisplay(false);
   };
 
+  const onDeleted = async (id) => {
+    window.confirm(`You sure deleted Data ?`)
+      ? await dependentApi.deletedDependent(id).then(() => {
+          dependents();
+        })
+      : dependents();
+  };
   return (
     <div>
       <div>

@@ -21,14 +21,6 @@ export default function CountryView() {
     });
   };
 
-  const onDeleted = async (id) => {
-    window.confirm(`Your sure deleted data ?`)
-      ? countryApi.deletedCountry(id).then(() => {
-          countries();
-        })
-      : countries();
-  };
-
   const handleChange = (name) => (e) => {
     setValues({ ...values, [name]: e.target.value });
   };
@@ -44,6 +36,14 @@ export default function CountryView() {
       window.alert(`Data Successfully Insert`);
     });
     setDisplay(false);
+  };
+
+  const onDeleted = async (id) => {
+    window.confirm(`Your sure deleted data ?`)
+      ? countryApi.deletedCountry(id).then(() => {
+          countries();
+        })
+      : countries();
   };
 
   return (

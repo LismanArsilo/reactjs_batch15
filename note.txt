@@ -1,0 +1,9 @@
+add = panggil api dengan menyimpan di variable function agar dapat di tampilkan di fungsi useEffect.
+deleted = panggil api dengan menyimpan di variable function agar dapat di terima params yang di kirim dengan button.
+Edit = menyiapkan display , id di dalam hook agar dapat di kirim sebagai props. setting tampilan . buat tujuan form pada view edit dan pengirimin id dengan button agar dapat di lakukan set hook yang sudah di buat .
+Edit view = tangkap data id yang di kirim untuk mendapatkan findOne dan siapkan hook untuk menyimpan data . agar dapat di gunakan dalam.
+Router = untuk menggunakan router tambahkan dependency react-router-dom kemudian setting indexnya dan appnya kemudian buat folder untuk tampilan depannya
+Employee Form = menggunakan dependency tambahan yaitu formik untuk mengolah form yang sudah di buat di backendnya. test di postmant inputan harus sesuai dengn urutan yang sudah di buat di backend. pembuatan update apinya harus di get terlebih dahulu id.nya
+Menampilkan Gambar = mengirim img dengan src api untuk upload .dan mengirim croosOriginnya anonymus agar tidak di block.
+value pada edit harus di berikan default agar tidak menampilkan error
+Redux-Saga = tambahkan dependency pada json redux-saga,redux-logger, react-helmet-async

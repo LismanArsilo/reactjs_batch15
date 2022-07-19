@@ -28,4 +28,31 @@ const deletedDepartment = async (id) => {
   }
 };
 
-export default { listDepartment, createDepartment, deletedDepartment };
+const findOne = async (id) => {
+  try {
+    const result = await axios.get(`${config.domain}/department/${id}`);
+    return result.data;
+  } catch (error) {
+    return await error.message;
+  }
+};
+
+const editDepartment = async (payload) => {
+  try {
+    const result = await axios.put(
+      `${config.domain}/department/${payload.department_id}`,
+      payload
+    );
+    return result;
+  } catch (error) {
+    return await error.message;
+  }
+};
+
+export default {
+  listDepartment,
+  createDepartment,
+  deletedDepartment,
+  findOne,
+  editDepartment,
+};

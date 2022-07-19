@@ -28,4 +28,22 @@ const deletedJob = async (id) => {
   }
 };
 
-export default { listJob, createJob, deletedJob };
+const findOne = async (id) => {
+  try {
+    const result = await axios.get(`${config.domain}/job/${id}`);
+    return result.data;
+  } catch (error) {
+    return await error.messagge;
+  }
+};
+
+const editJob = async (payload) => {
+  try {
+    const result = axios.put(`${config.domain}/job/${payload.job_id}`, payload);
+    return result;
+  } catch (error) {
+    return await error.messagge;
+  }
+};
+
+export default { listJob, createJob, deletedJob, findOne, editJob };

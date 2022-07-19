@@ -1,10 +1,15 @@
 import React, { useState, useEffect } from "react";
 import dependentApi from "../../api/dependentApi";
 import DependentAdd from "./DependentAdd";
+import DependentEdit from "./DependentEdit";
 
 export default function DependentView() {
   const [dependent, setDependent] = useState([]);
   const [display, setDisplay] = useState(false);
+  const [displayEdit, setDisplayEdit] = useState(false);
+  const [id, setId] = useState({
+    depentId: undefined,
+  });
   const [values, setValues] = useState({
     dependent_id: undefined,
     first_name: undefined,
@@ -53,6 +58,27 @@ export default function DependentView() {
         })
       : dependents();
   };
+
+  const onEdit = async (id) => {
+    setId(id);
+    setDisplayEdit(true);
+  };
+
+  const editForm = async () => {
+    const payload = {
+      dependent_id: id.depentId,
+      first_name: values.first_name,
+      last_name: values.last_name,
+      relationship: values.relationship,
+      employee_id: values.employee_id,
+    };
+    await dependentApi.editDependent(payload).then(() => {
+      window.alert(`Data Successfuly Update`);
+      dependents();
+    });
+    setDisplayEdit(false);
+  };
+
   return (
     <div>
       <div>
@@ -64,7 +90,14 @@ export default function DependentView() {
         >
           Add Dependent
         </button>
-        {display ? (
+        {displayEdit ? (
+          <DependentEdit
+            onSubmitForm={editForm}
+            handleChange={handleChange}
+            id={id}
+            setDisplay={setDisplayEdit}
+          />
+        ) : display ? (
           <DependentAdd
             onSubmitForm={onSubmit}
             handleChange={handleChange}
@@ -96,6 +129,14 @@ export default function DependentView() {
                       }}
                     >
                       Deleted
+                    </button>
+                    <button
+                      style={{ marginLeft: "5px" }}
+                      onClick={() => {
+                        onEdit({ depentId: depen.dependent_id });
+                      }}
+                    >
+                      Edit Dependent
                     </button>
                   </tr>
                 ))}

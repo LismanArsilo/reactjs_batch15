@@ -27,4 +27,31 @@ const deletedDependent = async (id) => {
     return await error.message;
   }
 };
-export default { listDependent, createDependent, deletedDependent };
+const findOne = async (id) => {
+  try {
+    const result = await axios.get(`${config.domain}/dependent/${id}`);
+    return result.data;
+  } catch (error) {
+    return await error.message;
+  }
+};
+
+const editDependent = async (payload) => {
+  try {
+    const result = await axios.put(
+      `${config.domain}/dependent/${payload.dependent_id}`,
+      payload
+    );
+    return result;
+  } catch (error) {
+    return await error.message;
+  }
+};
+
+export default {
+  listDependent,
+  createDependent,
+  deletedDependent,
+  findOne,
+  editDependent,
+};

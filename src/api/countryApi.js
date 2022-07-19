@@ -28,4 +28,31 @@ const deletedCountry = async (id) => {
   }
 };
 
-export default { listCountry, createCountry, deletedCountry };
+const findOne = async (id) => {
+  try {
+    const result = await axios.get(`${config.domain}/country/${id}`);
+    return result.data;
+  } catch (error) {
+    return await error.message;
+  }
+};
+
+const editCountry = async (data) => {
+  try {
+    const result = await axios.put(
+      `${config.domain}/country/${data.country_id}`,
+      data
+    );
+    return result;
+  } catch (error) {
+    return await error.message;
+  }
+};
+
+export default {
+  listCountry,
+  createCountry,
+  deletedCountry,
+  findOne,
+  editCountry,
+};

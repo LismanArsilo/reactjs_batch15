@@ -1,10 +1,15 @@
 import React, { useState, useEffect } from "react";
 import countryApi from "../../api/countryApi";
 import CountryAdd from "./CountryAdd";
+import CountryEdit from "./CountryEdit";
 
 export default function CountryView() {
   const [country, setCountry] = useState([]);
   const [display, setDisplay] = useState(false);
+  const [displayEdit, setDisplayEdit] = useState(false);
+  const [id, setId] = useState({
+    countId: undefined,
+  });
   const [values, setValues] = useState({
     country_id: undefined,
     country_name: undefined,
@@ -16,7 +21,7 @@ export default function CountryView() {
   }, []);
 
   const countries = async () => {
-    countryApi.listCountry().then((data) => {
+    await countryApi.listCountry().then((data) => {
       setCountry(data);
     });
   };
@@ -46,6 +51,24 @@ export default function CountryView() {
       : countries();
   };
 
+  const onEdit = async (id) => {
+    setDisplayEdit(true);
+    setId(id);
+  };
+
+  const editFrom = async () => {
+    const payload = {
+      country_id: id.countId,
+      country_name: values.country_name,
+      region_id: values.region_id,
+    };
+    await countryApi.editCountry(payload).then(() => {
+      window.alert(`Data Successfully Update`);
+      countries();
+    });
+    setDisplayEdit(false);
+  };
+
   return (
     <div>
       <div>
@@ -57,7 +80,14 @@ export default function CountryView() {
         >
           Add Country
         </button>
-        {display ? (
+        {displayEdit ? (
+          <CountryEdit
+            onSubmitForm={editFrom}
+            handleChange={handleChange}
+            id={id}
+            setDisplay={setDisplayEdit}
+          />
+        ) : display ? (
           <CountryAdd
             onSubmitForm={onSubmit}
             handleChange={handleChange}
@@ -80,13 +110,23 @@ export default function CountryView() {
                     <td>{country.country_id}</td>
                     <td>{country.country_name}</td>
                     <td>{country.region_id}</td>
-                    <button
-                      onClick={() => {
-                        onDeleted(country.country_id);
-                      }}
-                    >
-                      Deleted
-                    </button>
+                    <td>
+                      <button
+                        onClick={() => {
+                          onDeleted(country.country_id);
+                        }}
+                      >
+                        Deleted
+                      </button>
+                      <button
+                        style={{ marginLeft: "10px" }}
+                        onClick={() => {
+                          onEdit({ countId: country.country_id });
+                        }}
+                      >
+                        Edit Country
+                      </button>
+                    </td>
                   </tr>
                 ))}
               </tbody>

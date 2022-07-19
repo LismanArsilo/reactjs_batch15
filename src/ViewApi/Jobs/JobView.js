@@ -1,10 +1,15 @@
 import React, { useState, useEffect } from "react";
 import jobApi from "../../api/jobApi";
 import JobAdd from "./JobAdd";
+import JobsEdit from "./JobEdit";
 
 export default function JobView() {
   const [job, setJob] = useState([]);
   const [display, setDisplay] = useState(false);
+  const [displayEdit, setDisplayEdit] = useState(false);
+  const [id, setId] = useState({
+    jobId: undefined,
+  });
   const [values, setValues] = useState({
     job_id: undefined,
     min_salary: undefined,
@@ -51,6 +56,24 @@ export default function JobView() {
         })
       : jobs();
   };
+  const onEdit = async (id) => {
+    setId(id);
+    setDisplayEdit(true);
+  };
+
+  const formEdit = async () => {
+    const payload = {
+      job_id: id.jobId,
+      min_salary: values.min_salary,
+      max_salary: values.max_salary,
+      job_title: values.job_title,
+    };
+    await jobApi.editJob(payload).then(() => {
+      window.alert(`Data Successfully Update`);
+      jobs();
+    });
+    setDisplayEdit(false);
+  };
 
   return (
     <div>
@@ -63,7 +86,14 @@ export default function JobView() {
         >
           Add Job
         </button>
-        {display ? (
+        {displayEdit ? (
+          <JobsEdit
+            onSubmitForm={formEdit}
+            handleChange={handleChange}
+            id={id}
+            setDisplay={setDisplayEdit}
+          />
+        ) : display ? (
           <JobAdd
             onSubmitForm={onSubmit}
             handleChange={handleChange}
@@ -94,6 +124,14 @@ export default function JobView() {
                         }}
                       >
                         Deleted
+                      </button>
+                      <button
+                        style={{ marginLeft: "5px" }}
+                        onClick={() => {
+                          onEdit({ jobId: job.job_id });
+                        }}
+                      >
+                        Edit Job
                       </button>
                     </tr>
                   ))}

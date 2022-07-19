@@ -1,0 +1,19 @@
+.navbar {
+  border: 1px solid;
+}
+.layout {
+  margin: 10px;
+  text-decoration: none;
+  color: black;
+}
+
+.navigasi {
+  display: flex;
+  justify-content: center;
+}
+
+.layout:hover {
+  color: blue;
+  font-size: 0.9rem;
+  transition: 0.2s;
+}

@@ -27,5 +27,25 @@ const deletedRegion = async (id) => {
     return await error.message;
   }
 };
+const findOne = async (id) => {
+  try {
+    const result = await axios.get(`${config.domain}/region/${id}`);
+    return result.data;
+  } catch (error) {
+    return await error.message;
+  }
+};
 
-export default { listRegion, createRegion, deletedRegion };
+const editRegion = async (data) => {
+  try {
+    const result = await axios.put(
+      `${config.domain}/region/${data.region_id}`,
+      data
+    );
+    return result;
+  } catch (error) {
+    return await error.message;
+  }
+};
+
+export default { listRegion, createRegion, deletedRegion, editRegion, findOne };

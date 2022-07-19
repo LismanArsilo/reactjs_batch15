@@ -28,4 +28,31 @@ const deletedLocation = async (id) => {
   }
 };
 
-export default { listLocation, createLocation, deletedLocation };
+const findOne = async (id) => {
+  try {
+    const result = await axios.get(`${config.domain}/location/${id}`);
+    return result.data;
+  } catch (error) {
+    await error.message;
+  }
+};
+
+const editLocation = async (data) => {
+  try {
+    const result = await axios.put(
+      `${config.domain}/location/${data.location_id}`,
+      data
+    );
+    return result;
+  } catch (error) {
+    await error.message;
+  }
+};
+
+export default {
+  listLocation,
+  createLocation,
+  deletedLocation,
+  findOne,
+  editLocation,
+};

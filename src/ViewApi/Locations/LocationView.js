@@ -1,10 +1,15 @@
 import React, { useEffect, useState } from "react";
 import locationApi from "../../api/locationApi";
 import LocationAdd from "./LocationAdd";
+import LocationEdit from "./LocationEdit";
 
 export default function LocationView() {
   const [location, setLocation] = useState([]);
   const [display, setDisplay] = useState(false);
+  const [displayEdit, setDisplayEdit] = useState(false);
+  const [id, setId] = useState({
+    locId: undefined,
+  });
   const [values, setValues] = useState({
     location_id: undefined,
     street_address: undefined,
@@ -20,7 +25,7 @@ export default function LocationView() {
 
   // melakukan get dan di simpan ke dalam variabel agar dapat di gunakan kembali
   const locations = async () => {
-    locationApi.listLocation().then((data) => {
+    await locationApi.listLocation().then((data) => {
       setLocation(
         data.sort(function (a, b) {
           return a.location_id - b.location_id;
@@ -59,6 +64,27 @@ export default function LocationView() {
         })
       : locations();
   };
+
+  const onEdit = async (id) => {
+    setDisplayEdit(true);
+    setId(id);
+  };
+
+  const editForm = async () => {
+    const payload = {
+      location_id: id.locId,
+      street_address: values.street_address,
+      postal_code: values.postal_code,
+      city: values.city,
+      state_province: values.state_province,
+      country_id: values.country_id,
+    };
+    await locationApi.editLocation(payload).then(() => {
+      window.alert(`Data Successfully Update`);
+      locations();
+    });
+    setDisplayEdit(false);
+  };
   return (
     <div>
       <div>
@@ -70,7 +96,14 @@ export default function LocationView() {
         >
           Add Location
         </button>
-        {display ? (
+        {displayEdit ? (
+          <LocationEdit
+            onSubmitForm={editForm}
+            handleChange={handleChange}
+            id={id}
+            setDisplay={setDisplayEdit}
+          />
+        ) : display ? (
           <LocationAdd
             onSubmitForm={onSubmit}
             handleChange={handleChange}
@@ -98,13 +131,23 @@ export default function LocationView() {
                   <td>{location.city}</td>
                   <td>{location.state_province}</td>
                   <td>{location.country_id}</td>
-                  <button
-                    onClick={() => {
-                      onDeleted(location.location_id);
-                    }}
-                  >
-                    Deleted
-                  </button>
+                  <td>
+                    <button
+                      onClick={() => {
+                        onDeleted(location.location_id);
+                      }}
+                    >
+                      Deleted
+                    </button>
+                    <button
+                      style={{ marginLeft: "4px" }}
+                      onClick={() => {
+                        onEdit({ locId: location.location_id });
+                      }}
+                    >
+                      Edit Location
+                    </button>
+                  </td>
                 </tr>
               ))}
             </tbody>

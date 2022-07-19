@@ -1,10 +1,15 @@
 import React, { useState, useEffect } from "react";
 import departmentApi from "../../api/departmentApi";
 import DepartmentAdd from "./DepartmentAdd";
+import DepartmentEdit from "./DepartmentEdit";
 
 export default function DepartmentView() {
   const [department, setDepartment] = useState([]);
   const [display, setDisplay] = useState(false);
+  const [displayEdit, setDisplayEdit] = useState(false);
+  const [id, setId] = useState({
+    departId: undefined,
+  });
   const [values, setValues] = useState({
     department_id: undefined,
     department_name: undefined,
@@ -49,6 +54,23 @@ export default function DepartmentView() {
         })
       : departments();
   };
+  const onEdit = async (id) => {
+    setId(id);
+    setDisplayEdit(true);
+  };
+
+  const editForm = async () => {
+    const payload = {
+      department_id: id.departId,
+      department_name: values.department_name,
+      location_id: values.location_id,
+    };
+    await departmentApi.editDepartment(payload).then(() => {
+      window.alert(`Data Successfully Update`);
+      departments();
+    });
+    setDisplayEdit(false);
+  };
 
   return (
     <div>
@@ -61,7 +83,14 @@ export default function DepartmentView() {
         >
           Add Department
         </button>
-        {display ? (
+        {displayEdit ? (
+          <DepartmentEdit
+            onSubmitForm={editForm}
+            handleChange={handleChange}
+            id={id}
+            setDisplay={setDisplayEdit}
+          />
+        ) : display ? (
           <DepartmentAdd
             onSubmitForm={onSubmit}
             handleChange={handleChange}
@@ -84,9 +113,19 @@ export default function DepartmentView() {
                     <td>{depart.department_id}</td>
                     <td>{depart.department_name}</td>
                     <td>{depart.location_id}</td>
-                    <button onClick={() => onDeleted(depart.department_id)}>
-                      Deleted
-                    </button>
+                    <td>
+                      <button onClick={() => onDeleted(depart.department_id)}>
+                        Deleted
+                      </button>
+                      <button
+                        style={{ marginLeft: "5px" }}
+                        onClick={() =>
+                          onEdit({ departId: depart.department_id })
+                        }
+                      >
+                        Edit Department
+                      </button>
+                    </td>
                   </tr>
                 ))}
               </tbody>

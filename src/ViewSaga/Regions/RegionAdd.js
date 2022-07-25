@@ -15,6 +15,7 @@ export default function RegionAdd() {
       region_name: values.region_name,
     };
     dispatch(AddRegionRequest(payload));
+    window.alert("Data Insert Successfuly");
     navigate("/region");
   };
 
@@ -24,11 +25,12 @@ export default function RegionAdd() {
 
   return (
     <div className="container">
-      <div className="ml-14">
+      <div>
+        <h2 className="pt-3 ml-5 text-xl font-bold">Add Region</h2>
         <form onSubmit={onSubmitForm}>
           <div>
             <label
-              for="name"
+              htmlFor="name"
               className="block text-sm font-medium text-gray-700 ml-5 mt-5"
             >
               Region Name :
@@ -44,7 +46,7 @@ export default function RegionAdd() {
           <div className="flex justify-end w-2/4 ">
             <button
               type="submit"
-              className="px-4 bg-button rounded-2xl font-semibold hover:bg-purple-700 ring-2 ring-button mr-3"
+              className="px-4 bg-button rounded-2xl font-semibold hover:bg-purple-700 ring-2 ring-button mr-3 cursor-progress"
             >
               Simpan
             </button>

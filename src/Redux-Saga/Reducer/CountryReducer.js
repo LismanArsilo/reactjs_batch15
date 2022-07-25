@@ -2,6 +2,7 @@ import * as ActionType from "../Constant/CountryConstant";
 
 const INIT_STATE = {
   countries: [],
+  country: [],
 };
 
 const CountriesReducer = (state = INIT_STATE, action) => {
@@ -17,7 +18,15 @@ const CountriesReducer = (state = INIT_STATE, action) => {
     case ActionType.ADD_COUNTRIES_REQUEST:
       return { ...state };
     case ActionType.ADD_COUNTRIES_SUCCESS:
-      return AddcountrySucceed(state, action);
+      return AddCountrySucceed(state, action);
+    case ActionType.GETONE_COUNTRIES_REQUEST:
+      return { ...state };
+    case ActionType.GETONE_COUNTRIES_SUCCESS:
+      return GetOneCountrySucceed(state, action);
+    case ActionType.EDIT_COUNTRIES_REQUEST:
+      return { ...state };
+    case ActionType.EDIT_COUNTRIES_SUCCESS:
+      return EditCountrySucceed(state, action);
     default:
       return GetCountrySucceed(state, action);
   }
@@ -25,6 +34,10 @@ const CountriesReducer = (state = INIT_STATE, action) => {
 
 const GetCountrySucceed = (state, action) => {
   return { ...state, countries: action.payload };
+};
+
+const GetOneCountrySucceed = (state, action) => {
+  return { ...state, country: action.payload };
 };
 
 const DelCountrySucceed = (state, action) => {
@@ -38,11 +51,22 @@ const DelCountrySucceed = (state, action) => {
   };
 };
 
-const AddcountrySucceed = (state, action) => {
+const AddCountrySucceed = (state, action) => {
   const { payload } = action;
   return {
     ...state,
     countries: [...state.countries, payload],
+  };
+};
+
+const EditCountrySucceed = (state, action) => {
+  const { payload } = action;
+  const filterCountry = state.countries.filter(
+    (el) => el.country_id !== payload.country_id
+  );
+  return {
+    ...state,
+    countries: [...filterCountry, payload],
   };
 };
 

@@ -7,6 +7,10 @@ import {
   DelRegionFailed,
   AddRegionSuccess,
   AddRegionFailed,
+  GetOneRegionSuccess,
+  GetOneRegionFailed,
+  EditRegionSuccess,
+  EditRegionFailed,
 } from "../Action/RegionAction";
 
 function* handleGetRegion() {
@@ -41,5 +45,29 @@ function* handleAddRegion(action) {
     yield put(AddRegionFailed(error));
   }
 }
+function* handleGetOneRegion(action) {
+  const { payload } = action;
+  try {
+    const result = yield call(regionApi.findOne, payload);
+    yield put(GetOneRegionSuccess(result));
+  } catch (error) {
+    yield put(GetOneRegionFailed(error));
+  }
+}
+function* handleEditRegion(action) {
+  const { payload } = action;
+  try {
+    const result = yield call(regionApi.editRegion, payload);
+    yield put(EditRegionSuccess(result.data));
+  } catch (error) {
+    yield put(EditRegionFailed(error));
+  }
+}
 
-export { handleGetRegion, handleAddRegion, handleDelRegion };
+export {
+  handleGetRegion,
+  handleAddRegion,
+  handleDelRegion,
+  handleGetOneRegion,
+  handleEditRegion,
+};

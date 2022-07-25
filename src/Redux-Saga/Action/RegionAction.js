@@ -35,3 +35,27 @@ export const AddRegionFailed = (payload) => ({
   type: ActionType.ADD_REGIONS_FAILED,
   payload,
 });
+export const GetOneRegionRequest = (payload) => ({
+  type: ActionType.GETONE_REGIONS_REQUEST,
+  payload,
+});
+export const GetOneRegionSuccess = (payload) => ({
+  type: ActionType.GETONE_REGIONS_SUCCESS,
+  payload,
+});
+export const GetOneRegionFailed = (payload) => ({
+  type: ActionType.GETONE_REGIONS_FAILED,
+  payload,
+});
+export const EditRegionRequest = (payload) => ({
+  type: ActionType.EDIT_REGIONS_REQUEST,
+  payload,
+});
+export const EditRegionSuccess = (payload) => ({
+  type: ActionType.EDIT_REGIONS_SUCCESS,
+  payload,
+});
+export const EditRegionFailed = (payload) => ({
+  type: ActionType.EDIT_REGIONS_FAILED,
+  payload,
+});

@@ -7,6 +7,12 @@ import {
   AddEmployeeFailed,
   DelEmployeeSuccess,
   DelEmployeeFailed,
+  GetOneEmployeeSuccess,
+  GetOneEmployeeFailed,
+  EditEmployeeSuccess,
+  EditEmployeeFailed,
+  EditNoEmployeeSuccess,
+  EditNoEmployeeFailed,
 } from "../Action/EmployeeAction";
 
 function* handleGetEmployee() {
@@ -44,4 +50,41 @@ function* handleAddEmployee(action) {
   }
 }
 
-export { handleAddEmployee, handleGetEmployee, handleDelEmployee };
+function* handleGetOneEmployee(action) {
+  const { payload } = action;
+  try {
+    const result = yield call(employeeApi.findOne, payload);
+    yield put(GetOneEmployeeSuccess(result));
+  } catch (error) {
+    yield put(GetOneEmployeeFailed(error));
+  }
+}
+
+function* handleEditEmployee(action) {
+  const { payload } = action;
+  try {
+    const result = yield call(employeeApi.editEmployee, payload);
+    yield put(EditEmployeeSuccess(result.data[1]));
+  } catch (error) {
+    yield put(EditEmployeeFailed(error));
+  }
+}
+
+function* handleEditNoEmployee(action) {
+  const { payload } = action;
+  try {
+    const result = yield call(employeeApi.editNoEmployee, payload);
+    yield put(EditNoEmployeeSuccess(result.data[1]));
+  } catch (error) {
+    yield put(EditNoEmployeeFailed(error));
+  }
+}
+
+export {
+  handleAddEmployee,
+  handleGetEmployee,
+  handleDelEmployee,
+  handleGetOneEmployee,
+  handleEditEmployee,
+  handleEditNoEmployee,
+};

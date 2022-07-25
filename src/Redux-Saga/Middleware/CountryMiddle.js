@@ -7,18 +7,16 @@ import {
   DelCountryFailed,
   AddCountrySuccess,
   AddCountryFailed,
+  GetOneCountrySuccess,
+  GetOneCountryFailed,
+  EditCountrySuccess,
+  EditCountryFailed,
 } from "../Action/CountryAction";
 
 function* handleGetCountry() {
   try {
     const result = yield call(countryApi.listCountry);
-    yield put(
-      GetCountrySuccess(
-        result.sort(function (a, b) {
-          return a.country_id - b.country_id;
-        })
-      )
-    );
+    yield put(GetCountrySuccess(result));
   } catch (error) {
     yield put(GetCountryFailed(error));
   }
@@ -41,4 +39,29 @@ function* handleAddCountry(action) {
     yield put(AddCountryFailed(error));
   }
 }
-export { handleAddCountry, handleGetCountry, handleDelCountry };
+function* handleGetOneCountry(action) {
+  const { payload } = action;
+  try {
+    const result = yield call(countryApi.findOne, payload);
+    yield put(GetOneCountrySuccess(result));
+  } catch (error) {
+    yield put(GetOneCountryFailed(error));
+  }
+}
+function* handleEditCountry(action) {
+  const { payload } = action;
+  try {
+    const result = yield call(countryApi.editCountry, payload);
+    yield put(EditCountrySuccess(result.data));
+  } catch (error) {
+    yield put(EditCountryFailed(error));
+  }
+}
+
+export {
+  handleAddCountry,
+  handleGetCountry,
+  handleDelCountry,
+  handleGetOneCountry,
+  handleEditCountry,
+};

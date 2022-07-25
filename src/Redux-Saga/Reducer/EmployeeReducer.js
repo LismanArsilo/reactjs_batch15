@@ -1,7 +1,9 @@
+import { act } from "react-dom/test-utils";
 import * as ActionType from "../Constant/EmployeeConstant";
 
 const INIT_STATE = {
   employees: [],
+  employee: [],
 };
 
 const EmployeeReducer = (state = INIT_STATE, action) => {
@@ -18,6 +20,18 @@ const EmployeeReducer = (state = INIT_STATE, action) => {
       return { ...state };
     case ActionType.ADD_EMPLOYEE_SUCCESS:
       return AddEmployeeSucceed(state, action);
+    case ActionType.GETONE_EMPLOYEE_REQUEST:
+      return { ...state };
+    case ActionType.GETONE_EMPLOYEE_SUCCESS:
+      return GetOneEmployeeSucceed(state, action);
+    case ActionType.EDIT_EMPLOYEE_REQUEST:
+      return { ...state };
+    case ActionType.EDIT_EMPLOYEE_SUCCESS:
+      return EditEmployeeSucceed(state, action);
+    case ActionType.EDITNOFILE_EMPLOYEE_REQUEST:
+      return { ...state };
+    case ActionType.EDITNOFILE_EMPLOYEE_SUCCESS:
+      return EditNoEmployeeSucceed(state, action);
     default:
       return GetEmployeeSucceed(state, action);
   }
@@ -29,6 +43,14 @@ const GetEmployeeSucceed = (state, action) => {
     employees: action.payload,
   };
 };
+
+const GetOneEmployeeSucceed = (state, action) => {
+  return {
+    ...state,
+    employee: action.payload,
+  };
+};
+
 const DelEmployeeSucceed = (state, action) => {
   const { payload } = action;
   const filterEmployee = state.employees.filter(
@@ -46,4 +68,27 @@ const AddEmployeeSucceed = (state, action) => {
     employees: [...state.employees, payload],
   };
 };
+
+const EditEmployeeSucceed = (state, action) => {
+  const { payload } = action;
+  const filterEmployee = state.employees.filter(
+    (el) => el.employee_id !== payload[0].employee_id
+  );
+  return {
+    ...state,
+    employees: [...filterEmployee, payload[0]],
+  };
+};
+
+const EditNoEmployeeSucceed = (state, action) => {
+  const { payload } = action;
+  const filterEmployee = state.employees.filter(
+    (el) => el.employee_id !== payload[0].employee_id
+  );
+  return {
+    ...state,
+    employees: [...filterEmployee, payload[0]],
+  };
+};
+
 export default EmployeeReducer;

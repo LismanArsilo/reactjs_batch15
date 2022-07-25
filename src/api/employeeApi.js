@@ -59,6 +59,19 @@ const editEmployee = async (payload) => {
   }
 };
 
+const editNoEmployee = async (payload) => {
+  const employee_id = payload.employee_id;
+  try {
+    const result = await axios.put(
+      `${config.domain}/employee/nofile/${employee_id}`,
+      payload
+    );
+    return result;
+  } catch (error) {
+    return await error.message;
+  }
+};
+
 export default {
   listEmployee,
   deletedEmployee,
@@ -66,4 +79,5 @@ export default {
   findOne,
   editEmployee,
   image,
+  editNoEmployee,
 };

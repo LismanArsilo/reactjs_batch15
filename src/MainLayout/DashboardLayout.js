@@ -5,14 +5,15 @@ const navigation = [
   { name: "Dashboard", href: "/" },
   { name: "Region", href: "region" },
   { name: "Country", href: "country" },
+  { name: "Location", href: "location" },
   { name: "Employee", href: "employee" },
 ];
 
 export default function DashboardLayout() {
   return (
-    <div className="container max-w-full">
-      <div className=" bg-purple-700 p-3 flex items-end">
-        <h2 className="text-3xl pr-5 font-semibold text-lime-50">🤞</h2>
+    <div>
+      <div className=" bg-purple-700 p-3 flex items-end shadow-lg shadow-button fixed w-full">
+        <div className=" p-4 border border-slate-700 items-center mr-5 bg-purple-900 animate-spin hover:ease-in-out shadow-lg shadow-button"></div>
         <div>
           {navigation.map((item, index) => (
             <NavLink
@@ -25,7 +26,7 @@ export default function DashboardLayout() {
           ))}
         </div>
       </div>
-      <main>
+      <main className="pt-20 pb-5">
         {/* Page title & actions */}
         <Outlet />
       </main>

@@ -1,20 +1,33 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useEffect, useState } from "react";
 import { useFormik } from "formik";
-import { useDispatch } from "react-redux";
-import { AddEmployeeRequest } from "../../Redux-Saga/Action/EmployeeAction";
 import * as Yup from "yup";
+import { useNavigate, useParams } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  GetOneEmployeeRequest,
+  EditEmployeeRequest,
+  EditNoEmployeeRequest,
+} from "../../Redux-Saga/Action/EmployeeAction";
+import config from "../../config/config";
 
-export default function EmployeeAdd() {
-  const dispatch = useDispatch();
+export default function EmployeeEdit() {
+  const { id } = useParams();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const { employee } = useSelector((state) => state.employeeStated);
   const [previewImg, setPreviewImg] = useState();
   const [uploaded, setUploaded] = useState(false);
 
+  useEffect(() => {
+    dispatch(GetOneEmployeeRequest(id));
+  }, []);
+
+  useEffect(() => {
+    let img = `${config.domain + "/employee/file/" + employee.emp_profile}`;
+    setPreviewImg(img);
+  }, [employee]);
+
   const validateSchema = Yup.object().shape({
-    employee_id: Yup.string("Enter FirstName").required(
-      "Employee Id Is Required"
-    ),
     first_name: Yup.string("Enter FirstName").required("Firstname Is Required"),
     last_name: Yup.string("Enter Lastname").required("Lastname is required"),
     email: Yup.string("Enter Email").required("Email is required"),
@@ -30,35 +43,49 @@ export default function EmployeeAdd() {
       "Department ID is required"
     ),
   });
-
   const formik = useFormik({
+    enableReinitialize: true,
     initialValues: {
-      employee_id: "",
-      first_name: "",
-      last_name: "",
-      email: "",
-      phone_number: "",
-      salary: 0,
-      department_id: 0,
-      job_id: 0,
-      manager_id: 0,
-      emp_profile: undefined,
+      first_name: employee.first_name,
+      last_name: employee.last_name,
+      email: employee.email,
+      phone_number: employee.phone_number,
+      job_id: employee.job_id,
+      salary: employee.salary,
+      manager_id: employee.manager_id,
+      department_id: employee.department_id,
+      emp_profile: employee.emp_profile,
     },
     validationSchema: validateSchema,
     onSubmit: async (values) => {
-      let payload = new FormData();
-      payload.append("employee_id", parseInt(values.employee_id));
-      payload.append("first_name", values.first_name);
-      payload.append("last_name", values.last_name);
-      payload.append("email", values.email);
-      payload.append("phone_number", values.phone_number);
-      payload.append("salary", values.salary);
-      payload.append("department_id", parseInt(values.department_id));
-      payload.append("job_id", parseInt(values.job_id));
-      payload.append("manager_id", parseInt(values.manager_id));
-      payload.append("emp_profile", values.profile);
-      dispatch(AddEmployeeRequest(payload));
-      window.alert("Data Succesfully Insert");
+      if (uploaded === true) {
+        let payload = new FormData();
+        payload.append("first_name", values.first_name);
+        payload.append("last_name", values.last_name);
+        payload.append("email", values.email);
+        payload.append("phone_number", values.phone_number);
+        payload.append("salary", values.salary);
+        payload.append("department_id", parseInt(values.department_id));
+        payload.append("job_id", parseInt(values.job_id));
+        payload.append("manager_id", parseInt(values.manager_id));
+        payload.append("emp_profile", values.profile);
+        payload.append("employee_id", values.employee_id);
+        dispatch(EditEmployeeRequest(payload));
+      } else {
+        const payload = {
+          first_name: values.first_name,
+          last_name: values.last_name,
+          email: values.email,
+          phone_number: values.phone_number,
+          job_id: parseInt(values.job_id),
+          salary: values.salary,
+          manager_id: parseInt(values.manager_id),
+          department_id: parseInt(values.department_id),
+          employee_id: parseInt(employee.employee_id),
+        };
+        dispatch(EditNoEmployeeRequest(payload));
+      }
+      window.alert(`Data Update Successfully`);
       navigate("/employee");
     },
   });
@@ -77,7 +104,7 @@ export default function EmployeeAdd() {
   const onClearImage = (event) => {
     event.preventDefault();
     setUploaded(false);
-    setPreviewImg(undefined);
+    setPreviewImg(null);
   };
   return (
     <div className="container ml-6">
@@ -90,18 +117,11 @@ export default function EmployeeAdd() {
             Employee Id :
           </label>
           <input
-            className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block shadow-sm sm:text-sm rounded-md p-2 w-2/4 m-5 border border-gray-700"
+            className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block shadow-sm sm:text-sm rounded-md p-2 w-2/4 m-5 border border-gray-700 cursor-not-allowed"
             type="text"
-            name="employee_id"
-            id="employee_id"
-            value={formik.values.employee_id || ""}
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            autoComplete="employee_id"
+            defaultValue={employee.employee_id || ""}
+            disabled
           />
-          {formik.touched.employee_id && formik.errors.employee_id ? (
-            <p>{formik.errors.employee_id}</p>
-          ) : null}
         </div>
 
         <div>
@@ -278,30 +298,36 @@ export default function EmployeeAdd() {
             Profile :
           </label>
           <div className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block shadow-sm sm:text-sm rounded-md p-2 w-2/4 m-5 border border-gray-700 flex flex-col items-center">
-            {uploaded === false ? (
-              <div>
-                <svg
-                  stroke="currentColor"
-                  fill="none"
-                  width={50}
-                  viewBox="0 0 48 48"
-                  aria-hidden="true"
-                >
-                  <path
-                    d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                </svg>
-              </div>
+            {previewImg === `${config.domain + "/employee/file/null"}` ? (
+              <svg
+                className="mx-auto h-12 w-12 text-gray-400"
+                stroke="currentColor"
+                fill="none"
+                viewBox="0 0 48 48"
+                aria-hidden="true"
+              >
+                <path
+                  d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
             ) : (
-              <div className="text-right">
-                <img src={previewImg} alt="image" width={100} />
-                <button className="hover:bg-gray-400" onClick={onClearImage}>
+              <>
+                <img
+                  crossOrigin="anonymous"
+                  src={previewImg}
+                  alt="image"
+                  width={100}
+                />
+                <button
+                  className="hover:bg-gray-400 ml-20"
+                  onClick={onClearImage}
+                >
                   ⨉
                 </button>
-              </div>
+              </>
             )}
 
             <div className="flex flex-col text-center">
@@ -327,14 +353,14 @@ export default function EmployeeAdd() {
         </div>
         <div className="flex justify-end w-2/4">
           <button
-            className="px-4 bg-button rounded-2xl font-semibold hover:bg-purple-700 ring-2 ring-button mr-3 ml-2"
+            className="px-4 bg-blue-500 rounded-2xl font-semibold hover:bg-blue-700 ring-2 ring-blue-500 mr-3 ml-2"
             type="submit"
             onClick={formik.handleSubmit}
           >
             Simpan
           </button>
           <button
-            className="px-4 bg-button rounded-2xl font-semibold hover:bg-purple-700 ring-2 ring-button "
+            className="px-4 bg-red-500 rounded-2xl font-semibold hover:bg-red-700 ring-2 ring-red-500"
             onClick={() => navigate("/employee")}
           >
             Cancel
